@@ -40,6 +40,13 @@ class StoreConfigSchema(StoreConfigSchemaCreate):
     pk: int
 
 
+## Identifiers ##
+
+class IdentifierTypeSchema(Schema):
+    name: str
+    pattern: Optional[str] = ''
+
+
 ## Media ##
 
 class MediaSchema(Schema):
