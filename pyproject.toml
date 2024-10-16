@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "amplify-schemas"
-version = "0.1"
+version = "0.1.0"
 description = "Pydantic Schemas for various AMPLIfy messaging"
 readme = "README.md"
 authors = [{name = "Sidney Batchelder", email = "sbatchelder@whoi.edu"}]
@@ -13,7 +13,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-keywords = ['storage']
+keywords = ['schemas','messaging','amplify']
 dependencies = [
     'pydantic',
 ]
