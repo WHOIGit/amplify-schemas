@@ -53,6 +53,8 @@ class MediaSchema(Schema):
     pk: int
     pid: str
     pid_type: str
+    mark: int
+    version: str
     store_config: StoreConfigSchema
     store_status: str
     identifiers: dict
