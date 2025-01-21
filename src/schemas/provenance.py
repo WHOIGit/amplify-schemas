@@ -3,6 +3,13 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
 from datetime import datetime
 
+class BaseProvenanceModel(BaseModel):
+    """Base model with UTC datetime configuration"""
+    class Config:
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat()
+        }
+
 class ProvVerb(str, Enum):
     WAS_GENERATED_BY = "wasGeneratedBy"
     WAS_ATTRIBUTED_TO = "wasAttributedTo"
@@ -41,13 +48,13 @@ class ProvType(str, Enum):
     def choices(cls):
         return [(type.value, type.name) for type in cls]
 
-class NodeCreate(BaseModel):
+class NodeCreate(BaseProvenanceModel):
     label: str = Field(..., description="Globally unique identifier for the node")
     node_type: ProvType = Field(..., description="Type of provenance node")
     description: Optional[str] = Field(None, description="Human-readable description")
     metadata: Dict = Field(default_factory=dict, description="Additional attributes")
 
-class RelationCreate(BaseModel):
+class RelationCreate(BaseProvenanceModel):
     subject_label: str = Field(..., description="Label of the subject node")
     verb: ProvVerb = Field(..., description="Type of provenance relationship")
     object_label: str = Field(..., description="Label of the object node")
@@ -55,19 +62,19 @@ class RelationCreate(BaseModel):
     end_time: Optional[datetime] = None
     metadata: Dict = Field(default_factory=dict, description="Additional attributes")
 
-class ProvenanceRecord(BaseModel):
+class ProvenanceRecord(BaseProvenanceModel):
     nodes: List[NodeCreate] = Field(..., description="Nodes to create if they don't exist")
     relations: List[RelationCreate] = Field(..., description="Relations to create between nodes")
     run_id: str = Field(..., description="Identifier for grouping related provenance statements")
 
-class NodeResponse(BaseModel):
+class NodeResponse(BaseProvenanceModel):
     label: str = Field(..., description="Globally unique identifier for the node")
     node_type: ProvType = Field(..., description="Type of provenance node")
     description: Optional[str] = Field(None, description="Human-readable description")
     metadata: Dict = Field(default_factory=dict, description="Additional attributes")
     created_at: datetime = Field(..., description="When the node was first created")
 
-class RelationResponse(BaseModel):
+class RelationResponse(BaseProvenanceModel):
     subject_label: str = Field(..., description="Label of the subject node")
     verb: ProvVerb = Field(..., description="Type of provenance relationship")
     object_label: str = Field(..., description="Label of the object node")
@@ -77,5 +84,5 @@ class RelationResponse(BaseModel):
     metadata: Dict = Field(default_factory=dict, description="Additional attributes")
     created_at: datetime = Field(..., description="When the relation was created")
 
-class ProvenanceResponse(BaseModel):
+class ProvenanceResponse(BaseProvenanceModel):
     relations: List[RelationResponse] = Field(..., description="Relations created in this transaction")
