@@ -1,14 +1,26 @@
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from typing import List, Optional, Dict
 from datetime import datetime
 
+
 class BaseProvenanceModel(BaseModel):
-    """Base model with UTC datetime configuration"""
-    class Config:
-        json_encoders = {
-            datetime: lambda dt: dt.isoformat()
-        }
+    """Base model with UTC datetime configuration and JSON handling"""
+    model_config = ConfigDict(
+        extra="forbid",
+        validate_assignment=True,
+        str_strip_whitespace=True,
+    )
+    
+    def model_dump(self, *args, **kwargs):
+        """Override model_dump to exclude None values by default"""
+        kwargs.setdefault("exclude_none", True)
+        return super().model_dump(*args, **kwargs)
+        
+    def model_dump_json(self, *args, **kwargs):
+        """Override model_dump_json to exclude None values by default"""
+        kwargs.setdefault("exclude_none", True)
+        return super().model_dump_json(*args, **kwargs)
 
 class ProvVerb(str, Enum):
     WAS_GENERATED_BY = "wasGeneratedBy"
