@@ -19,6 +19,10 @@ class ProvVerb(str, Enum):
     INVALIDATED_BY = "invalidatedBy"
     WAS_INVALIDATED_BY = "wasInvalidatedBy"
 
+    @classmethod
+    def choices(cls):
+        return [(verb.value, verb.name) for verb in cls]
+
 class ProvType(str, Enum):
     ENTITY = "Entity"
     ACTIVITY = "Activity"
@@ -32,6 +36,10 @@ class ProvType(str, Enum):
     PRIMARY_SOURCE = "PrimarySource"
     REVISION = "Revision"
     QUOTATION = "Quotation"
+
+    @classmethod
+    def choices(cls):
+        return [(type.value, type.name) for type in cls]
 
 class NodeCreate(BaseModel):
     label: str = Field(..., description="Globally unique identifier for the node")
