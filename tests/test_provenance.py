@@ -8,12 +8,13 @@ from schemas.provenance import (
     RelationCreate, RelationResponse,
     ProvenanceRecord, ProvenanceResponse,
     ProvType, ProvVerb,
-    BaseProvenanceModel
+    BaseProvenanceModel,
+    ISO_FORMAT
 )
 
 def make_utc_datetime(dt: datetime) -> datetime:
-    """Helper to ensure datetime is UTC with 'Z' representation"""
-    return dt.astimezone(timezone.utc).replace(tzinfo=timezone.utc)
+    """Helper to ensure datetime is UTC with '+00:00' representation"""
+    return dt.astimezone(timezone.utc)
 
 def test_base_model_configuration():
     """Test BaseProvenanceModel configuration"""
@@ -74,8 +75,8 @@ def test_relation_create_serialization():
         "subject_label": "subject-node",
         "verb": "wasGeneratedBy",
         "object_label": "object-node",
-        "start_time": now.isoformat().replace("+00:00", "Z"),
-        "end_time": later.isoformat().replace("+00:00", "Z"),
+        "start_time": make_utc_datetime(now).strftime(ISO_FORMAT),
+        "end_time": make_utc_datetime(later).strftime(ISO_FORMAT),
         "metadata": {"key": "value"}
     }
 

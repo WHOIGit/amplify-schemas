@@ -1,12 +1,25 @@
 from enum import Enum
+import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import List, Optional, Dict
-from datetime import datetime
+from datetime import datetime, timezone
+
+
+ISO_FORMAT='%Y-%m-%dT%H:%M:%S.%f%z'
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.astimezone(timezone.utc).strftime(ISO_FORMAT)
+        return super().default(obj)
 
 
 class BaseProvenanceModel(BaseModel):
     """Base model with UTC datetime configuration and JSON handling"""
     model_config = ConfigDict(
+        json_encoders={
+            datetime: lambda dt: dt.astimezone(timezone.utc).strftime(ISO_FORMAT)
+        },
         extra="forbid",
         validate_assignment=True,
         str_strip_whitespace=True,
