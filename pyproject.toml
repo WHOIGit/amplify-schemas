@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "amplify-schemas"
-version = "0.1.0"
+version = "0.2.0"
 description = "Pydantic Schemas for various AMPLIfy messaging"
 readme = "README.md"
 authors = [{name = "Sidney Batchelder", email = "sbatchelder@whoi.edu"}]
